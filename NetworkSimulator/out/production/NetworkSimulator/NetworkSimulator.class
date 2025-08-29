@@ -1,0 +1,166 @@
+Êþº¾   C«
+       java/lang/Object <init> ()V	  	  
+ 
+  java/lang/System out Ljava/io/PrintStream;  Enter the number of devices: 
+       java/io/PrintStream print (Ljava/lang/String;)V	       NetworkSimulator sc Ljava/util/Scanner;
+        java/util/Scanner  nextInt ()I
+  " # $ nextLine ()Ljava/lang/String; & 8Enter subnet prefix length (e.g. 24 for 255.255.255.0): 
+  ( ) * prefixLengthToMask (I)Ljava/lang/String;  , java/util/ArrayList
+ +  / 
+Generating devices...
+  1 2   println
+  4 5 * generateRandomIP
+  7 8 $ generateRandomMac  : NetworkSimulator$Device
+ 9 <  = :(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+ ? @  A B C java/util/List add (Ljava/lang/Object;)Z	  E F G arpCache Ljava/util/Map;
+ I J  K L M 
+java/util/Map put 8(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  O 2 P (Ljava/lang/Object;)V  R [[I	  T U R graph  W java/util/Random
+ V 
+ V Z  [ (I)I	  ] ^ _ INF I a :
+Choose routing type:
+1. Static Routing
+2. Dynamic Routing c  
+--- Static Routing Selected ---
+  e f g performStaticRouting (Ljava/util/List;)V
+  i j  displayArpCache l !
+--- Dynamic Routing Selected --- n 9Choose protocol:
+1. RIP (Bellman-Ford)
+2. OSPF (Dijkstra) p 7
+Performing Dynamic Routing using RIP (Bellman-Ford)...
+  r s g 
+performRIP u 4
+Performing Dynamic Routing using OSPF (Dijkstra)...
+  w x g 
+performOSPF z Invalid choice! | 
+Enter source device IP:  ~ Enter destination device IP: 
+  €  ‚ findDeviceByIP =(Ljava/util/List;Ljava/lang/String;)LNetworkSimulator$Device; „ !Invalid source or destination IP!   † ‡ ˆ makeConcatWithConstants 8(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;	 9 Š ‹ _ id
+   Ž  findPath (II)Ljava/util/List;
+ ? ‘ ’   size ” )No path found from source to destination! – !Delivery path (with ARP lookups):
+ ? ˜ ™ š get (I)Ljava/lang/Object;  œ java/lang/Integer
+ › ž Ÿ   intValue	 9 ¡ ¢ £ ipv4 Ljava/lang/String;
+  ¥ ¦ § 
+resolveMac &(Ljava/lang/String;)Ljava/lang/String;  © ‡ §  « ‡ ¬ 9(ILjava/lang/String;Ljava/lang/String;)Ljava/lang/String; ® Data successfully delivered.  ° ‡ ± (IIII)Ljava/lang/String;@       
+ µ ¶  · ¸ ¹ java/lang/Math pow (DD)D
+ V » ¼ ½ 	nextBytes ([B)V  ¿ java/lang/StringBuilder
+ ¾ Á  Â (I)V
+ ¾ Ä Å   length Ç :
+ ¾ É Ê Ë append -(Ljava/lang/String;)Ljava/lang/StringBuilder; Í %02x
+ Ï Ð  Ñ Ò Ó java/lang/Byte  valueOf (B)Ljava/lang/Byte;
+ Õ Ö  × Ø Ù java/lang/String format 9(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+ ¾ Û Ü $ toString Þ ,Performing static routing (manual routes)...	  à á G 
+routingTables
+ I ã ä  clear  æ java/util/HashMap
+ å 
+ › é Ò ê (I)Ljava/lang/Integer;  ©
+ I í ™ î &(Ljava/lang/Object;)Ljava/lang/Object;
+ I ð ñ ò entrySet ()Ljava/util/Set;
+ ô õ  ö ÷ ø 
+java/util/Set iterator ()Ljava/util/Iterator;
+ ú û  ü ý þ java/util/Iterator  hasNext ()Z
+ ú  next ()Ljava/lang/Object;  java/util/Map$Entry
+  getKey
+	
+ getValue  †
+ 
+
+ARP Cache:  †
+ ? õ   ©
+  java/util/Arrays fill ([II)V N/A  Dest: %s, Cost: %d, NextHop: %s
+
+  printf <(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+   2   ©
+ Õ#$ C equals
+ I ‘ 	 ©	 ()* in Ljava/io/InputStream;
+ , - (Ljava/io/InputStream;)V B? 	Signature 5Ljava/util/Map<Ljava/lang/String;Ljava/lang/String;>; [Ljava/util/Map<Ljava/lang/Integer;Ljava/util/Map<Ljava/lang/Integer;Ljava/lang/Integer;>;>; Code LineNumberTable LocalVariableTable this LNetworkSimulator; main ([Ljava/lang/String;)V ip mac d LNetworkSimulator$Device; i j protocolChoice device args [Ljava/lang/String; n prefixLength 
+subnetMask  devices Ljava/util/List; rand Ljava/util/Random; 
+routingChoice srcIP destIP 	srcDevice 
+destDevice path LocalVariableTypeTable +Ljava/util/List<LNetworkSimulator$Device;>; %Ljava/util/List<Ljava/lang/Integer;>; 
+StackMapTable B V [I prefix mask parts hostBits  maxHost first second third fourth b B  macAddr [B sb Ljava/lang/StringBuilder; c routingTable dest  nextHop entry Ljava/util/Map$Entry; d1 rt 7Ljava/util/Map<Ljava/lang/Integer;Ljava/lang/Integer;>; =Ljava/util/Map$Entry<Ljava/lang/Integer;Ljava/lang/Integer;>; .(Ljava/util/List<LNetworkSimulator$Device;>;)V ;Ljava/util/Map$Entry<Ljava/lang/String;Ljava/lang/String;>; v u hop 	nextHopIp dist source alt  minDist prev  visited [Z | X(Ljava/util/List<LNetworkSimulator$Device;>;Ljava/lang/String;)LNetworkSimulator$Device; Ljava/lang/Integer; sourceId destId  current )(II)Ljava/util/List<Ljava/lang/Integer;>; <clinit> 
+SourceFile NetworkSimulator.java 
+NestMembers BootstrapMethodsŠ 
+Delivering data from  to ...Œ .ARP request for  failed. Cannot deliver data.Ž Hop : IP:  -> MAC:   ...’ 
+Routing table for device ” Route to  via – IP:  -> MAC: ˜ !Routing table for device  (RIP):š "Routing table for device  (OSPF):œ Sending ARP request for IP: ž
+Ÿ  ¡ ‡¢ $java/lang/invoke/StringConcatFactory ˜(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite; InnerClasses Device Entry § %java/lang/invoke/MethodHandles$Lookup © java/lang/invoke/MethodHandles Lookup !            F G /   0  ^ _    U R    á G /   1 
+    2   /     *· ±   3       4       56   	78 2  Ë    °²  
+¶ ² ¶ <² ¶ !W²  %¶ ² ¶ =² ¶ !W¸ 'N» +Y· -:²  .¶ 06¢ C¸ 3:¸ 6: » 9Y- · ;:¹ > W² D ¹ H W²  ¶ N„§ÿ½Å Q³ S» VY· X:6¢ P6  ¢ A   ² S2 O§ '² S2 
+¶ Y ¢ 	¶ Y`§ ² \O„ §ÿ¿„§ÿ°6¢ -`6  ¢ ² S 2² S2 .O„ §ÿå„§ÿÓ²  `¶ 0² ¶ 6² ¶ !W  ²  b¶ 0¸ d¸ h§ i  Z²  k¶ 0²  m¶ 0² ¶ 6 ² ¶ !W   ²  o¶ 0¸ q§ "   ²  t¶ 0¸ v§ ²  y¶ 0±§ ²  y¶ 0±²  {¶ ² ¶ !: ²  }¶ ² ¶ !: ¸ :	¸ :
+	Æ 
+Ç ²  ƒ¶ 0±²   º …  ¶ 0	´ ‰
+´ ‰¸ Œ:
+
+Æ 
+
+¹  š ²  “¶ 0§ y²  •¶ 06
+¹  ¢ Z
+¹ — À ›¶ ¹ — À 9:
+
+´  ¸ ¤:Ç ²  
+´  º ¨  ¶ 0±²  `
+´  º ª  ¶ 0„§ÿ ²  ­¶ 0±   3  6 M      !  "  $  % % & , ( 1 * : , B - K . Q / V 0 f 1 p 2 } 3 … - ‹ 6 ” 7  8 ¦ 9 ¯ : Ã < ç 9 í 8 ó A ü B C B  A& G. H6 I= KC LK MP NV O\ Pd Ql Rt S{ U V‰ W‘ X— YŸ Z§ \¯ ]° _³ `» a¼ dÄ eÌ fÔ gÜ iå jî lø m  n q r s. t9 vA wP xk yu zz {Š |‹ ~¡ w§ €¯ ‚4   ò  Q 49 £  V /: £   f ;<  E F= _  © D> _     S= _  > _   ö 0= _ t <? _  k 6@< 
+u ,: £ D c= _   °AB   ¡C _  %‹D _  1E £  :vFG  HI 6zJ _ Ì äK £  Ü ÔL £ å ËM< 	î ÂN< 
+ ‘OG 
+P     :vFQ  ‘OR 
+S   ¹ ÿ E  T  Õ  ?  ú Eý   Vü ÿ   T  Õ  ?  V  Uÿ   T  Õ  ?  V  U ú ú ü ü 
+ú ú ü /ü :ú ÿ ; 
+ T  Õ  ?  V  Õ  Õ  9  9  ü ,  ?
+ü 
+ý F  9  Õø    ) * 2   ©     : dx< ¼
+M> ¢ ,hdz ÿ~O„§ÿè,.,.,.,.º ¯  °   3       …   † 
+ ‡  ˆ " ‡ ( Š4   *  
+ = _    :W _     3X _  
+ /YV S   
+ þ 
+ Uú   5 * 2  B     » VY· XL À= ¨>66£ + ¶ Y6+ ¶ Y6§ G£ -+ ¶ Y6 d6 ²‡¸ ´Žd6 + ¶ Y`6§ + ¶ Y6+ þ¶ Y`6º ¯  °   3   >    Ž      ’  “ % ” 1 • 7 – @ — F ˜ T ™ ^ š a › j œ u ž4   R  F Z _  T 
+[ _     D _    yHI   u\ _   q] _   n^ _   k_ _ S    ÿ 1   V  /  8 $ 2        t» VY· XK¼L*+¶ º++3þ~‘T++3€‘T» ¾Y· ÀM+N-¾66¢ 3-36,¶ Ãž 
+,Æ¶ ÈW,Ì½ Y¸ ÎS¸ Ô¶ ÈW„§ÿÌ,¶ Ú°   3   . 
+   ¢  £ 
+ ¤  ¥  ¦ % ¨ / © E ª S « i © o ­4   *  E $`a   lHI   
+ gbc  / Ede S   + ÿ 8   V f  ¾ f  ü ÿ    V f  ¾    f g 2  6    ²  Ý¶ 0² ß¹ â <*¹  ¢ E» åY· çM>*¹  ¢ Ÿ ,¸ è¸ è¹ H W„§ÿß² ß¸ è,¹ H W„§ÿ·<*¹  ¢ ž*¹ — À 9M²  ,´  º ë  ¶ 0² ß¸ è¹ ì À IN-¹ ï ¹ ó :¹ ù ™ W¹ ÿ À:*¹ À ›¶ ¹ — À 9:*¹ À ›¶ ¹ — À 9: ²  ´   ´  º
+  ¶ 0§ÿ¥„§ÿ^±   3   R    ±  ²  ´  µ $ ¶ 0 · D ¶ J ¹ X ´ ^ ¼ j ½ u ¾ „ ¿ ” À · Á Ï Â ç Ã ü Ä ÿ ¼ Æ4   f 
+ & $> _  $ 4g G   L= _  Ï -h<  ç i<   · Ejk  u Šl<  ” km G  ` ¥= _   FG  P   *  $ 4gn  · Ejo  ” kmn   FQ  S   * 	ü ý   Iú ù ü þ @  9  I  úø ]ú /   p  j  2   ¨     K²  ¶ 0² D¹ ï ¹ ó K*¹ ù ™ -*¹ ÿ ÀL²  +¹ À Õ+¹ À Õº  ¶ 0§ÿÐ±   3       É 	 Ê * Ë G Ì J Í4     * jk P     * jq S   
+ ü   úú 2  s g 2  I   
+  ²² ß¹ â *¹  <*¹ M,¹ ù ™•,¹ ÿ À 9N²  -´  º  ¶ 0¼
+:¼
+:² \¸¸-´ ‰O-´ ‰-´ ‰O6¢ s6  ¢ d6¢ U² S 2.² \Ÿ @ .² \Ÿ 5 .² S 2.`.¢  .² S 2.`O O„§ÿ«„ §ÿœ„§ÿ» åY· ç:6  ¢ « -´ ‰  § ™ 6.-´ ‰Ÿ  .Ÿ .Ÿ 
+.6§ÿÚ.  6 ¸ è¸ è¹ H WŸ *¹ — À 9´  § :	²  ½ Y* ¹ — À 9´  SY .¸ èSY	S¶W„ §ÿU² ß-´ ‰¸ è¹ H W²  ¶§þh±   3   Š "   Ð  Ñ  Ò ) Ó 8 Ô = Õ B Ö J × P Ø X Ù c Û l Ü u Ý ~ Þ ¯ ß Ã à Ê Ý Ð Ü Ö Û Ü æ å ç î è ú é þ ê ë' í3 îE ïa ð ç– ò¨ ó® ô± õ4   z  x Xr _  o gs _   f v= _  þ ’t _ a /u £ 	 è ®h _   =qvV  BliV  å Ég G  )…w<   ²FG   £C _ P     å Égn   ²FQ  S   Y ý   úÿ O    ?  ú  9 U U  ü ü û Qú ú ú ý 
+  Iü (
+(B  Õú 0ú ÿ    ?  /   p  x g 2  °     Ê² ß¹ â *¹  <*¹ M,¹ ù ™­,¹ ÿ À 9N²  -´  º!  ¶ 0¼
+:¼
+:¼:² \¸¸-´ ‰O6  ¢ ›6² \6	6
+
+¢ &
+3š 
+.	¢ 
+.6	
+6„
+§ÿÚ  § ^T6
+
+¢ I
+3š ;² S2
+.² \Ÿ ,.² S2
+.`6
+
+
+.¢ 
+
+O
+O„
+§ÿ·„ §ÿe» åY· ç: 6¢ ¡-´ ‰  § 6		.-´ ‰Ÿ 	.Ÿ 
+	.6	§ÿä	.  6	 ¸ è	¸ è¹ H W	Ÿ *	¹ — À 9´  § :
+²  ½ Y*¹ — À 9´  SY.¸ èSY
+S¶W„§ÿ_² ß-´ ‰¸ è ¹ H W²  ¶§þP±   3   ª *   ø  ù  ú ) û 8 ü = ý B þ G ÿ O  U ] f n w ‰   ” š
+ £ © ² É Ú ä ë ò ø þ  5? K!]"y#¨®%À&Æ'É(4   ¢  q )> _ 
+ Ú x _ 
+ ¬ Lr _ 
+ i s _  n Šy _ 	 ` ž= _    ˆi _ 	y /u £ 
+
+ ¤h _  =‰vV  B„zV  G{|   ¿g G   )w<   ÊFG   »C _ P      ¿gn    ÊFQ  S   ` ý   úÿ I   ?  ú  9 U U }  þ "ú ü û Eø ú ý 
+  Iü 
+(B  Õú 0ú ÿ    ?  /   p   ‚ 2   š     ,*¹ M,¹ ù ™ ,¹ ÿ À 9N-´  +¶"™ -°§ÿà°   3      + , '- *.4       
+;<    ,FG     ,9 £ P       ,FQ  S    ü    úú /   ~  Ž  2  A     y» +Y· -M,¸ è¹ > W>Ÿ `² ß¸ è¹ ì À I:Ç °¸ è¹ ì À ›:Æ ¶   °,¹ > W¶ >,¹  ² ß¹% ¤ °§ÿ¡,°   3   6 
+  2 3 4 5 6 +7 28 B9 R: [; a< t= w>4   >  + Im G  B 2i    y€ _     y _   qOG   d‚ _ P     + Imn   qOR S    ý   ?ü   Iü   ›ù !/   ƒ  ¦ § 2   m     ² D*¹ ì À ÕL+Ç ²  *º&  ¶ 0+°   3      B 
+C D F4       9 £   
+ : £ S    ü   Õ „  2   L      (» Y²'·+³ » åY· ç³ D.³ \» åY· ç³ ß±   3        
+      …   †‡     9ˆ   > 
+ ‰ ‹   ‘ “ • — ™ ›£     9 ¤  I¥	¦¨ª 
