@@ -44,8 +44,8 @@ A modular simulation of OSI model layers implemented in Java. The project demons
 ### Run the Project
 1. Clone the repository
    ''bash
-   -git clone https://github.com/tejal083/netowrk-simulator.git
-   -cd network-simulator
+    git clone https://github.com/tejal083/netowrk-simulator.git''
+   cd network-simulator
 
 3. Compile the code
    ''bash
